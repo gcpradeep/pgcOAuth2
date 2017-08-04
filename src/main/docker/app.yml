@@ -1,0 +1,29 @@
+version: '2'
+services:
+    pgcoauth2-app:
+        image: pgcoauth2
+        environment:
+            - SPRING_PROFILES_ACTIVE=prod,swagger
+            - SPRING_DATASOURCE_URL=jdbc:mariadb://pgcoauth2-mariadb:3306/pgcoauth2
+            - JHIPSTER_SLEEP=10 # gives time for the database to boot before the application
+            - SPRING_DATA_ELASTICSEARCH_CLUSTER_NODES=pgcoauth2-elasticsearch:9300
+            - SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS=kafka
+            - SPRING_CLOUD_STREAM_KAFKA_BINDER_ZK_NODES=zookeeper
+    pgcoauth2-mariadb:
+        extends:
+            file: mariadb.yml
+            service: pgcoauth2-mariadb
+    pgcoauth2-elasticsearch:
+        extends:
+            file: elasticsearch.yml
+            service: pgcoauth2-elasticsearch
+    kafka:
+        extends:
+            file: kafka.yml
+            service: kafka
+        environment:
+            - KAFKA_ADVERTISED_HOST_NAME=kafka
+    zookeeper:
+        extends:
+            file: kafka.yml
+            service: zookeeper
